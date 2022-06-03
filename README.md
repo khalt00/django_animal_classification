@@ -1,0 +1,1 @@
+# django_animal_classification
