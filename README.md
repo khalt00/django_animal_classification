@@ -6,7 +6,7 @@
  (python = 3.9 để cài đặt sẵn python trong môi trường)
  B2: conda activate django
  
- B3: pip install django trochvision
+ B3: pip install django torchvision
  
  B4: Clone project
 
