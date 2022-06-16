@@ -39,19 +39,22 @@ from .forms import ImageUploadForm
 # dataset = ImageFolder(data_dir + '/train', transform=ToTensor())
 # print('Size of training dataset :', len(dataset))
 
-classes = ['badger', 'bat', 'bear', 'bee',
- 'beetle', 'bison', 'boar', 'butterfly',
-  'cat', 'caterpillar', 'cheetah', 'crab',
-   'crow', 'deer', 'dog', 'dolphin', 'duck',
-    'eagle', 'elephant', 'flamingo', 'fox',
-     'goat', 'goldfish', 'goose', 'hamster',
-      'hare', 'hedgehog', 'hippopotamus', 'horse',
-       'hummingbird', 'hyena', 'jellyfish', 'kangaroo',
-        'koala', 'ladybugs', 'leopard', 'lion', 'lizard',
-         'mouse', 'otter', 'owl', 'panda', 'parrot', 'pelecaniformes',
-          'penguin', 'pig', 'pigeon', 'rhinoceros', 'seahorse', 'seal',
-           'shark', 'sheep', 'snake', 'sparrow', 'squid', 'squirrel', 'starfish',
-            'swan', 'turtle', 'whale', 'wolf', 'woodpecker', 'zebra']
+# classes = ['badger', 'bat', 'bear', 'bee',
+#  'beetle', 'bison', 'boar', 'butterfly',
+#   'cat', 'caterpillar', 'cheetah', 'crab',
+#    'crow', 'deer', 'dog', 'dolphin', 'duck',
+#     'eagle', 'elephant', 'flamingo', 'fox',
+#      'goat', 'goldfish', 'goose', 'hamster',
+#       'hare', 'hedgehog', 'hippopotamus', 'horse',
+#        'hummingbird', 'hyena', 'jellyfish', 'kangaroo',
+#         'koala', 'ladybugs', 'leopard', 'lion', 'lizard',
+#          'mouse', 'otter', 'owl', 'panda', 'parrot', 'pelecaniformes',
+#           'penguin', 'pig', 'pigeon', 'rhinoceros', 'seahorse', 'seal',
+#            'shark', 'sheep', 'snake', 'sparrow', 'squid', 'squirrel', 'starfish',
+#             'swan', 'turtle', 'whale', 'wolf', 'woodpecker', 'zebra']
+
+classes = ['cats','dogs']
+
 
 def accuracy(outputs, labels):
     _, preds = torch.max(outputs, dim=1)
@@ -168,10 +171,10 @@ class CnnModel(ImageClassificationBase):
     def __init__(self):
         super().__init__()
         # Use a pretrained model
-        self.network = models.resnet18(pretrained=True)
+        self.network = models.resnet50(pretrained=True)
         # Replace last layer
         num_ftrs = self.network.fc.in_features
-        self.network.fc = nn.Linear(num_ftrs, 63)
+        self.network.fc = nn.Linear(num_ftrs, 2)
     
     def forward(self, xb):
         return torch.sigmoid(self.network(xb))
@@ -179,7 +182,7 @@ class CnnModel(ImageClassificationBase):
 
 model = CnnModel() 
 # model = ResNet_18(3,63)
-model.load_state_dict(torch.load('C:/Users/IVS/Downloads/resnet18_29k.pth',map_location=torch.device('cpu')))
+model.load_state_dict(torch.load('./modelcatdog.pth',map_location=torch.device('cpu')))
 # model = models.densenet121(pretrained=True)
 model.eval()
 model.to('cpu')
@@ -210,20 +213,22 @@ def get_prediction(image_bytes):
     # class_name, human_label = classes[predicted_idx]
     # return human_label
     prob =  torch.nn.functional.softmax(outputs,dim=1)
-    print(torch.max(prob,1))
-    print(torch.topk(prob,k=3))
-    percent, pred5 = torch.topk(prob,3)
-    print(percent*100)
-    test = pred5.numpy()
-    top3_pred = []
-    for t in test:
-        print(t)
-    top3_pred.append(t)
-
-    print(classes[top3_pred[0][0]])
-    print(classes[top3_pred[0][1]])
-    print(classes[top3_pred[0][2]])
-    return classes[top3_pred[0][0]]
+    a,b = torch.max(outputs,1)
+    # print(torch.topk(prob,k=3))
+    # percent, pred5 = torch.topk(prob,3)
+    # print(percent*100)
+    # test = pred5.numpy()
+    # top3_pred = []
+    # for t in test:
+    #     print(t)
+    # top3_pred.append(t)
+    c = b[0].item()
+    print(classes[c])
+    print(prob)
+    # print(classes[top3_pred[0][0]])
+    # print(classes[top3_pred[0][1]])
+    # print(classes[top3_pred[0][2]])
+    return classes[c]
 
 def index(request):
     image_uri = None
