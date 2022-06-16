@@ -1,5 +1,5 @@
 # django_animal_classification
 
-# Clone
+ Clone
 
-# sử dụng lệnh python manage.py runserver để chạy.
+ sử dụng lệnh python manage.py runserver để chạy.
