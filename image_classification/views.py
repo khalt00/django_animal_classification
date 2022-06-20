@@ -225,10 +225,12 @@ def get_prediction(image_bytes):
     c = b[0].item()
     print(classes[c])
     print(prob)
+    d = torch.max(prob,1)
+    percent = f'{round(d[0].item()*100,2)}%'
     # print(classes[top3_pred[0][0]])
     # print(classes[top3_pred[0][1]])
     # print(classes[top3_pred[0][2]])
-    return classes[c]
+    return classes[c], percent
 
 def index(request):
     image_uri = None
