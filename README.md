@@ -11,7 +11,7 @@
  
  B4: Clone project
 
- B5: sử dụng lệnh **python manage.py** runserver để chạy.
+ B5: sử dụng lệnh **python manage.py runserver**  để chạy.
  
  
  
